@@ -1,6 +1,7 @@
 import requests
 import json
 
+#Obtiene el id y nombre de los tragos del 11000 -> 16000
 def get_by_id():
     
     for i in range(11000,16000):
