@@ -10,6 +10,9 @@ def get_by_id():
     n = input("Ingrese numero de requests: ")
     i = 0
     r1=redis.Redis(host='localhost', port=6379)
+    
+    file = open('data.txt','w')
+    
     while(i!=n):
         id = random.randint(11000,16000);
         inicio=time.time()
@@ -34,6 +37,9 @@ def get_by_id():
             print(str(id) + " : " + str(dato))
         final=time.time()
         print(final-inicio)
+        
+        file.write(str((final-inicio))+'\n')
+        
         i=i+1
         
 
