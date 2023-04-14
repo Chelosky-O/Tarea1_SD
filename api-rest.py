@@ -13,7 +13,7 @@ def getfromDocker(id, puerto):
          print(str(id) + " : " + str(cocktail))
         
 def searchBackend(id, puerto):
-    r=redis.Redis(host='localhost', port=puerto)
+    r = redis.Redis(host='localhost', port=puerto)
     url = "http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={}".format(id)
     #url = "http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=11000"
     response = requests.get(url)
@@ -26,7 +26,9 @@ def searchBackend(id, puerto):
         print(str(id) + " : " + nombre)
         r.set(id, data['drinks'][0]['strDrink'])
     else:
-                print(str(id) + " : " + "ERROR")
+        nombre = "ERROR"
+        print(str(id) + " : " + nombre)
+        r.set(id, nombre)
 
 #Obtiene el id y nombre de los tragos del 11000 -> 16000
 def get_by_id():
