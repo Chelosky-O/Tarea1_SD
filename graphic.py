@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 def graficar():
     valores = []
@@ -14,7 +15,9 @@ def graficar():
     x = np.arange(0,valores_count,1)
     
     y = list(np.float_(valores))
-
+    
+    total = math.fsum(np.float_(valores))
+    print("Total: " + str(total/60) + " minutos")
     
     plt.plot(x,y)
     plt.xlabel('Nro Peticion')
