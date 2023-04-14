@@ -1,36 +1,48 @@
 from concurrent import futures
 import requests
-
+import redis
 import grpc
 
 import main_pb2_grpc
 import main_pb2
 
-'Aqui implentar puerto y nombre redis'
-
+redis_host = 'localhost'
+redis_port = 6379
 
 class GreeterService(main_pb2_grpc.DataServicer):
-
+    def __init__(self):
+        self.redis = redis.StrictRedis(host=redis_host, port=redis_port,charset="utf-8",
+                                       decode_responses=True, db=0)
+        pass
     def getCocktailName(self, request, context):
-        '''sacar context '''
-        print("mensaje recibido! ")
+        #print("mensaje recibido! ")
         index = request.id
-        #'caso 1, está en caché'
-        #'Caso 2, no está en caché
 
-        '''Sacar el json, formatearlo y dejarlo listo'''
+        cache_search = self.redis.get(index)
+
+        #'caso 1, está en cache'
+        if cache_search != None:
+            print("Dato encontrado en cache!")
+            print("cache " + str(cache_search))
+            cocktail_response = main_pb2.cocktailName(name=str(cache_search))
+
+            return(cocktail_response)
+
+        #'Caso 2, no está en cache
+        #Sacar el json, formatearlo y dejarlo listo
 
         url = "http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={}".format(index)
         response = requests.get(url)
         data = response.json()["drinks"]
-        #print(data)
-       #data = response.json()["drinks"][0]["strDrink"]
 
         if(data == None):
+            self.redis.set(index, "None")
             print("Respondiendo... : " + "None")
             cocktail_response = main_pb2.cocktailName(name="None")
         else:
+
             data = data[0]["strDrink"]
+            self.redis.set(index, str(data))
             print("Respondiendo... : " + data)
         #"Esta es la respuesta de la api que debería contar en el timer, el resto es obtener la info"
             cocktail_response = main_pb2.cocktailName(name = str(data))
