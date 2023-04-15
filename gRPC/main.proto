@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package mypackage;
+
+service Data {
+    rpc getCocktailName(cocktailId) returns (cocktailName);
+}
+
+message cocktailId {
+int32 id = 1;
+}
+
+message cocktailName {
+string name = 1;
+}
+
